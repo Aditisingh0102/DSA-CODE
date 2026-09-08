@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Cycle {
+public class CycleInGraph {
     public static class Edge {
         int src;
         int dest;
@@ -21,33 +21,42 @@ public class Cycle {
             graph.set(i, new ArrayList<>());
         }
 
-        graph.get(0).add(new Edge(0, 2));
+        graph.get(0).add(new Edge(0, 1));
+        graph.get(0).add(new Edge(0, 4));
+
         graph.get(1).add(new Edge(1, 0));
+        graph.get(1).add(new Edge(1, 2));
+        graph.get(1).add(new Edge(1, 4));
+
+        graph.get(2).add(new Edge(2, 1));
         graph.get(2).add(new Edge(2, 3));
+
+        graph.get(3).add(new Edge(3, 2));
+
+        graph.get(4).add(new Edge(4, 0));
+        graph.get(4).add(new Edge(4, 1));
+        graph.get(4).add(new Edge(4, 5));
+
+        graph.get(5).add(new Edge(5, 4));
     }
 
-    public static boolean isCycleDirected(List<List<Edge>> graph, boolean[] vis, int curr, boolean[] rec) {
+    public static boolean isCycleUndirected(List<List<Edge>> graph, boolean[] vis, int curr, int par) {
         vis[curr] = true;
-        rec[curr] = true;
-
         for (int i = 0; i < graph.get(curr).size(); i++) {
             Edge e = graph.get(curr).get(i);
-
-            if (rec[e.dest]) {
+            if (vis[e.dest] && e.dest != par) {
                 return true;
             } else if (!vis[e.dest]) {
-                if (isCycleDirected(graph, vis, e.dest, rec)) {
+                if (isCycleUndirected(graph, vis, e.dest, curr)) {
                     return true;
                 }
             }
         }
-
-        rec[curr] = false;
         return false;
     }
 
     public static void main(String[] args) {
-        int V = 4;
+        int V = 6;
         List<List<Edge>> graph = new ArrayList<>();
         for (int i = 0; i < V; i++) {
             graph.add(new ArrayList<>());
@@ -55,17 +64,6 @@ public class Cycle {
 
         createGraph(graph);
 
-        boolean[] vis = new boolean[V];
-        boolean[] rec = new boolean[V];
-
-        for (int i = 0; i < V; i++) {
-            if (!vis[i]) {
-                boolean isCycle = isCycleDirected(graph, vis, i, rec);
-                if (isCycle) {
-                    System.out.println(isCycle);
-                    break;
-                }
-            }
-        }
+        System.out.println(isCycleUndirected(graph, new boolean[V], 0, -1));
     }
 }

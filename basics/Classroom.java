@@ -11,6 +11,11 @@ public class Classroom {
             this.src = s;
             this.dest = d;
         }
+
+        @Override
+        public String toString() {
+            return src + " -> " + dest;
+        }
     }
 
     public static void creategraph(ArrayList<Edges> graph[]) {

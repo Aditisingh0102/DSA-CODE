@@ -26,7 +26,6 @@ public class java {
             }
             out.append(ans).append('\n');
         }
-
         System.out.print(out);
     }
 }
